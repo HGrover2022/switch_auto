@@ -1,0 +1,36 @@
+# switched.cloud 定时签到与任务控制台配置模板
+# 首次启动 web_app.py 时会自动复制为 config.yaml
+
+server:
+  host: "127.0.0.1"          # 仅本机回环监听（无登录密码设计，如需远程访问请走 SSH 端口转发）
+  port: 50914
+
+panel:
+  origin: "https://panel.switched.cloud"
+  # 在浏览器 F12 -> Network -> 原始请求头中复制整行 Cookie 即可，无需筛选
+  # 建议包含 remember_web_* 以获得长期免登录能力；运行中 Set-Cookie 会自动回写更新
+  cookie: ""
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  timeout: 30
+
+tasks:
+  streak: true               # 每日连签（Daily streak）
+  adfocus: true              # adfoc.us 纯 HTTP 直刷
+  linkvertise: true          # linkvertise GraphQL 任务链直刷
+  gap_min: 25                # 每轮之间最小等待秒数（下限 5）
+  gap_max: 60                # 每轮之间最大等待秒数
+  lv_auth: ""                # 可选：Linkvertise Bearer token（留空则走匿名链）
+  lv_ut: ""                  # 可选：Linkvertise X-Linkvertise-UT
+
+keepalive:
+  session_enabled: true      # 定时 GET /tokens 保活登录态
+  session_interval_min: 10   # 会话保活间隔（分钟，下限 2）
+  server_enabled: false      # 定时 GET /vps/<uuid> 防服务器闲置回收
+  server_interval_sec: 60    # VPS 保活间隔（秒，下限 20）
+
+schedule:
+  enabled: false             # 是否开启每日定时自动打开总开关
+  time: "08:30"              # 基准时间（本机时区，HH:MM）
+  jitter_min: 30             # 实际触发 = 基准时间 ± jitter_min 分钟（按日期固定种子）
+  last_run_date: ""          # 最近一次定时触发日期（YYYY-MM-DD）
+  last_streak_date: ""       # 最近一次连签确认日期（YYYY-MM-DD）

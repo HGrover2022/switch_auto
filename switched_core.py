@@ -492,7 +492,10 @@ class SwitchedClient:
             if len(html) < 500 or "my_key" not in html:
                 page = ad_sess.get(
                     entry_url,
-                    headers={"Referer": f"{self.origin}/tokens"},
+                    headers={
+                        "Referer": f"{self.origin}/tokens",
+                        **AD_DOC_HEADERS,
+                    },
                     timeout=self.timeout,
                     allow_redirects=True,
                 )

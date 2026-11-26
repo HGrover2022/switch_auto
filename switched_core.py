@@ -200,6 +200,14 @@ def _op_id() -> str:
     )
 
 
+# adfoc.us 的文档 GET 必须带 Accept: text/html —— requests 默认的 Accept: */* 会拿到
+# 200 + 0 字节空页（历史日志里的「直刷页面无 my_key（0B）」）。Accept-Language 不在这里给，
+# 沿用 ad_sess 的默认值，避免和后续 /credit /state /skip 的请求头不一致。
+AD_DOC_HEADERS = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+}
+
+
 def _adfoc_state_a(key: str) -> dict:
     base = 1560 + random.randint(0, 180)
     return {
@@ -492,7 +500,10 @@ class SwitchedClient:
             if len(html) < 500 or "my_key" not in html:
                 page = ad_sess.get(
                     entry_url,
-                    headers={"Referer": f"{self.origin}/tokens"},
+                    headers={
+                        "Referer": f"{self.origin}/tokens",
+                        **AD_DOC_HEADERS,
+                    },
                     timeout=self.timeout,
                     allow_redirects=True,
                 )

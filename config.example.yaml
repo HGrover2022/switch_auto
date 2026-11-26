@@ -30,7 +30,7 @@ keepalive:
 
 schedule:
   enabled: false             # 是否开启每日定时自动打开总开关
-  time: "08:30"              # 基准时间（本机时区，HH:MM）
+  time: "10:00"              # 基准时间（本机时区，HH:MM）
   jitter_min: 30             # 实际触发 = 基准时间 ± jitter_min 分钟（按日期固定种子）
   last_run_date: ""          # 最近一次定时触发日期（YYYY-MM-DD）
   last_streak_date: ""       # 最近一次连签确认日期（YYYY-MM-DD）
